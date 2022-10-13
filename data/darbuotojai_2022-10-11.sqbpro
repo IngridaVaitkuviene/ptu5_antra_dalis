@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/ingri/Desktop/pythono_kursai/data/darbuotojai.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1078"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,11:mainDARBUOTOJAI"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="DARBUOTOJAI" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="88"/><column index="2" value="83"/><column index="3" value="101"/><column index="4" value="140"/><column index="5" value="164"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">-- ištraukiam visus duomenis
+SELECT * FROM person;
+-- ištraukiam tik vardus ir lytis
+SELECT first_name, gender FROM person;
+-- Išrenkam unikalius gender
+SELECT DISTINCT gender FROM person;
+-- WHERE užklausos tikslinimas. Kabutes tik dvigubos, kai uzklausa
+SELECT * FROM person WHERE gender=&quot;Female&quot;;
+-- sąlygose naudojamos datos. Funkcijose gali buti viengubos kabutes
+SELECT * FROM person WHERE date_of_birth &gt; date('1992-10-11');
+-- loginės sąlygos
+SELECT * FROM person WHERE date_of_birth &gt; date('1994-10-11') AND gender = &quot;Female&quot;;
+-- rūšiavimas. Gale prirašius DESC gausime atvikštinį rūšiavimą
+SELECT * FROM person WHERE gender = &quot;Female&quot; ORDER BY date_of_birth DESC;
+-- rūšiavimas pagal kelis stulpelius
+SELECT * FROM person ORDER BY gender, last_name;
+-- grupavimas
+SELECT gender, count(*), min(date_of_birth), max(date_of_birth) FROM person GROUP BY gender;
+-- nuo select iki from pasirenkam stulpelius, nuo from ka pasirenkam ir pagal ka kokia salyga ar uzklausa
+SELECT gender, count(*) AS &quot;count&quot;, min(date_of_birth) AS oldest, max(date_of_birth) AS youngest FROM person GROUP BY gender;</sql><sql name="SQL 2">SELECT
+	*
+FROM
+	person
+GROUP BY
+	last_name,
+	first_name
+HAVING
+	date_of_birth
+		BETWEEN
+			date('1980-09-09')
+		AND
+			date('2001-01-01');</sql><sql name="SQL 3">--SELECT * FROM person LIMIT 1;
+-- Duomenų įterpimas
+INSERT INTO person VALUES (
+	&quot;Ingrida&quot;, &quot;Vaitkuvienė&quot;, &quot;ingrida.strazdaite@gmail.com&quot;, datetime('1991-11-05 21:10:10'), &quot;Female&quot;, &quot;Middle of Nowhere oy&quot;
+);
+-- paleidžiam tik vienąkart</sql><sql name="SQL 4">--SELECT * FROM person LIMIT 1;
+-- Duomenų įterpimas
+INSERT INTO person
+	(first_name, last_name, email, date_of_birth, gender, company)
+ VALUES
+	(
+		&quot;Justina&quot;, 
+		&quot;Zymonaitė&quot;,
+		&quot;justina@gmail.com&quot;, 
+		datetime('2000-01-01 00:00:07'),
+		&quot;Female&quot;,
+		&quot;Žiedų valdovai&quot;
+);</sql><sql name="SQL 5">-- Duomenų redagavimas
+UPDATE person SET date_of_birth=datetime('1988-10-27 12:00:00') WHERE first_name=&quot;Justina&quot;;</sql><sql name="SQL 6">-- pakeitem varda i Trinamas
+UPDATE person SET first_name=&quot;Trinamas&quot; WHERE first_name=&quot;Ingrida&quot;;</sql><sql name="SQL 7">-- kaip istrinti is browse data
+DELETE FROM person where first_name=&quot;Trinamas&quot;;</sql><sql name="SQL 8">-- masinis redagavimas
+-- SELECT * FROM person WHERE gender=&quot;Female&quot; and date_of_birth &gt; date('1997-01-01')
+UPDATE person SET company=&quot;Middle of Nowhere oy&quot; WHERE gender=&quot;Female&quot; and date_of_birth &gt; date('1997-01-01')</sql><sql name="SQL 9">-- SELECT * FROM person WHERE NOT company = &quot;Middle of Nowhere oy&quot;;
+DELETE FROM person WHERE NOT company  = &quot;Middle of Nowhere oy&quot;;
+SELECT * FROM person;</sql><sql name="SQL 10">-- delete from istrina tik duomenis, bet ne pacia lentele
+DELETE FROM person;
+-- drop table istrina ir pacia lentele
+DROP TABLE person;
+SELECT * FROM person;
+</sql><sql name="SQL 11">-- Išrinkite visus duomenis iš lentelės “DARBUOTOJAI”.
+SELECT * FROM DARBUOTOJAI;</sql><sql name="SQL 12">-- Išrinkite visus duomenis iš stulpelio “GIMIMO_DATA” - lentelėje “DARBUOTOJAI”.
+SELECT GIMIMO_DATA FROM DARBUOTOJAI;</sql><sql name="SQL 13">-- Išrinkite visus duomenis iš stulpelių “VARDAS”,”PAVARDĖ”, “PAREIGOS” - lentelėje “DARBUOTOJAI”.
+SELECT VARDAS, PAVARDĖ, PAREIGOS FROM DARBUOTOJAI</sql><sql name="SQL 14">-- Išrinkite unikalias reikšmes iš stulpelio SKYRIUS_PAVADINIMAS - lentelėje “DARBUOTOJAI”.
+SELECT DISTINCT SKYRIUS_PAVADINIMAS from DARBUOTOJAI</sql><sql name="SQL 15">-- Išrinkite visus duomenis apie darbuotojus, kurie dirba Gamybos skyriuje.
+SELECT * FROM DARBUOTOJAI WHERE SKYRIUS_PAVADINIMAS=&quot;Gamybos&quot;</sql><sql name="SQL 16">-- Išrinkite duomenis, kokias pareigas užima Giedrius
+SELECT PAREIGOS FROM DARBUOTOJAI WHERE VARDAS=&quot;Giedrius&quot;</sql><sql name="SQL 17">-- Išrinkite visus duomenis apie darbuotojus, kurių gimimo data - 1986-09-19
+SELECT * FROM DARBUOTOJAI WHERE GIMIMO_DATA == date('1986-09-19')</sql><sql name="SQL 18">-- Išrinkite darbuotojų vardus, kurių pavardės yra Sabutis
+SELECT VARDAS FROM DARBUOTOJAI WHERE PAVARDĖ=&quot;Sabutis&quot;</sql><sql name="SQL 19">-- Išrinkite duomenis (vardą ir pavardę) apie programuotojus iš Gamybos skyriaus
+SELECT VARDAS, PAVARDĖ FROM DARBUOTOJAI WHERE SKYRIUS_PAVADINIMAS=&quot;Gamybos&quot;</sql><sql name="SQL 20">-- Įterpkite į lentelę “DARBUOTOJAI” naują darbuotoją, užpildydami visus reikiamus laukus (vardą, pavardę, gimimo metus, pareigas, skyriaus pavadinimą).
+INSERT INTO DARBUOTOJAI VALUES(
+	&quot;Ingrida&quot;, &quot;Vaitkuvienė&quot;, date('1991-11-05'), &quot;Laisvo oro direktorė&quot;, &quot;Laisvo oro&quot;
+	);</sql><sql name="SQL 21">-- Įterpkite į lentelę “DARBUOTOJAI” naują darbuotoją, užpildydami tik laukus (vardą, pavardę, gimimo metus). Pareigas ir skyriaus pavadinimą palikite neužpildytus.
+INSERT INTO DARBUOTOJAI VALUES(
+	&quot;Mantvydas&quot;, &quot;Vaitkus&quot;, date('1993-04-01'), &quot; &quot;, &quot; &quot;
+	);</sql><sql name="SQL 22">-- Užpildykite likusius tuščius laukus “DARBUOTOJAI” lentelėje, jūsų prieš tai įterptame įraše. Priskirkite darbuotojui pareigas ir skyrių.
+UPDATE DARBUOTOJAI SET PAREIGOS=&quot;Laisvo oro direktorius&quot;, SKYRIUS_PAVADINIMAS=&quot;Laisvo oro&quot; WHERE VARDAS=&quot;Mantvydas&quot;</sql><sql name="SQL 23">-- Ištrinkite lentelės “DARBUOTOJAI” įrašą, kurio gimimo data yra tokia, kurią jūs sukūrėte.
+DELETE FROM DARBUOTOJAI WHERE GIMIMO_DATA=date('1991-11-05');</sql><sql name="SQL 24">-- Įterpkite, du darbuotojus, pavarde Antanaitis, kurių pareigos būtų “Programuotojas”.
+INSERT INTO DARBUOTOJAI VALUES(
+	&quot;Antanas&quot;, &quot;Antanaitis&quot;, date('1991-11-05'), &quot;Programuotojas&quot;, &quot;IT&quot;
+	);</sql><sql name="SQL 25">-- Pakeiskite, abiejų Antanaičių pareigas į “Testuotojas” vienu sakiniu.
+UPDATE DARBUOTOJAI SET PAREIGOS=&quot;Testuotojas&quot; WHERE PAVARDĖ=&quot;Antanaitis&quot;;</sql><sql name="SQL 26">-- Suskaičiuokite, kiek įmonėje dirba Testuotojų.
+SELECT count(*) FROM DARBUOTOJAI WHERE PAREIGOS=&quot;Testuotojas&quot;;</sql><current_tab id="25"/></tab_sql></sqlb_project>

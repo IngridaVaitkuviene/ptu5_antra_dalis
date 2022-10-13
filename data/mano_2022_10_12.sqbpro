@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/ingri/Desktop/pythono_kursai/data/mano_2022_10_12.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1833"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="0" parent="0"/><expanded_item id="1" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:maincoders"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 2">-- CREATE TABLE
+-- VARCHAR VariousCharacters, kiek simbolių gali būti
+-- paprastas variantas kaip susikurti lentelę:
+CREATE TABLE coder (
+	First_name VARCHAR(50),
+	last_name VARCHAR(100),
+	email VARCHAR(255),
+	age INTEGER,
+	xp_years INTEGER
+);
+-- Sukūrėme lentelę coder, kurioje stulpeliai vardas, pavardė, amžius, patirtis(metais) turi nurodytus duomenų tipus.
+
+-- jei blogai nurodem stulpelio pavadinima, pataisyti taip:
+ALTER TABLE coders RENAME &quot;email&quot; TO &quot;e-mail&quot;;
+
+-- ištrina lentelę:
+DROP TABLE coder;
+
+-- antras būdas, kaip susikurti lentelę su apribojimais
+CREATE TABLE coders (
+	id INTEGER PRIMARY KEY NOT NULL,
+	first_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(100) NOT NULL,
+	email VARCHAR(255) UNIQUE,
+	age INTEGER CHECK (age &gt; 17 AND age &lt; 75),
+	xp_years INTEGER CHECK (xp_years &gt; 0 AND xp_years &lt; 50)
+	
+);
+
+--po nurodyto stulpelio duomenų tipo galime (pagal poreikį) surašyti apribojimus:
+--NOT NULL - nurodo, kad įrašas negali būti tuščias;
+--PRIMARY KEY - stulpelį nustato kaip pirminį raktą;
+--UNIQUE - nurodo, kad įrašai stulpelyje negali kartotis;
+--CHECK (Sąlyga) - Tikrina, ar įrašomi duomenys atitinka sąlygą;
+--DEFAULT - nurodo numatytąją reikšmę, jeigu duomenys nesuvedami;
+
+-- ALTER TABLE. Prisidedam papildomus stulpelius:
+ALTER TABLE coders ADD COLUMN project_id INTEGER;
+ALTER TABLE coders ADD COLUMN team_id INTEGER;
+
+CREATE TABLE teams (
+	id INTEGER PRIMARY KEY NOT NULL,
+	name VARCHAR(50) NOT NULL
+);
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

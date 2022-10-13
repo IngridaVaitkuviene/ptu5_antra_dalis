@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/ingri/Desktop/pythono_kursai/data/darbuotojai3.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2502"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,11:mainDARBUOTOJAS"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="DARBUOTOJAS" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="65"/><column index="3" value="83"/><column index="4" value="112"/><column index="5" value="98"/><column index="6" value="82"/><column index="7" value="155"/><column index="8" value="61"/><column index="9" value="85"/><column index="10" value="102"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="PROJEKTAS" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="60"/><column index="2" value="111"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="SKYRIUS" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="101"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">-- Išrinkite darbuotojų vardus ir pavardes kartu su projekto pavadinimu, kuriame jie dirba.
+SELECT VARDAS, PAVARDĖ, PAVADINIMAS FROM DARBUOTOJAS JOIN PROJEKTAS ON DARBUOTOJAS.PROJEKTAS_ID = PROJEKTAS.ID;
+
+-- bet yra ir tu, kurie nepriskirti jokiam projektui, kaip tada???? 
+-- Atsakymuose:
+SELECT VARDAS, PAVARDĖ, PROJEKTAS.PAVADINIMAS FROM DARBUOTOJAS JOIN PROJEKTAS on PROJEKTAS.ID = DARBUOTOJAS.PROJEKTAS_ID;
+-- šis variantas vis tiek nerodo visko</sql><sql name="SQL 2">--Išsirinkite darbuotojų, dirbančių projekte Galerija, vardus, pavardes ir projekto pavadinimą.
+SELECT VARDAS, PAVARDĖ, PAVADINIMAS FROM DARBUOTOJAS, PROJEKTAS WHERE DARBUOTOJAS.PROJEKTAS_ID=PROJEKTAS.ID AND PROJEKTAS.PAVADINIMAS=&quot;Galerija&quot;;
+
+-- Atsakymuose:
+SELECT VARDAS, PAVARDĖ, PAVADINIMAS from DARBUOTOJAS JOIN PROJEKTAS on PROJEKTAS.ID = DARBUOTOJAS.PROJEKTAS_ID WHERE PROJEKTAS.PAVADINIMAS = &quot;Galerija&quot;</sql><sql name="SQL 3">-- Išrinkite visus projekto Projektų valdymas vykdytojus, dirbančius Pardavimų skyriuje.
+SELECT VARDAS, PAVARDĖ, PROJEKTAS.PAVADINIMAS AS &quot;Projektas&quot;, SKYRIUS.PAVADINIMAS AS &quot;Skyrius&quot;
+	FROM DARBUOTOJAS, PROJEKTAS, SKYRIUS 
+	WHERE DARBUOTOJAS.PROJEKTAS_ID=PROJEKTAS.ID AND DARBUOTOJAS.SKYRIUS_ID=SKYRIUS.ID
+	AND PROJEKTAS.PAVADINIMAS=&quot;Projektų valdymas&quot; AND SKYRIUS.PAVADINIMAS=&quot;Pardavimų&quot;;
+	
+-- Atsakymuose:
+SELECT * from DARBUOTOJAS
+	JOIN SKYRIUS on SKYRIUS.id = DARBUOTOJAS.SKYRIUS_ID
+	JOIN PROJEKTAS ON PROJEKTAS.ID = DARBUOTOJAS.PROJEKTAS_ID 
+	WHERE SKYRIUS.PAVADINIMAS = &quot;Pardavimų&quot; AND PROJEKTAS.PAVADINIMAS = &quot;Projektų valdymas&quot;;</sql><sql name="SQL 4">-- Išrinkite visas moteris, dirbančias projekte Projektų valdymas, ir išveskite į ekraną jų vardus, pavardes ir projekto pavadinimą.
+SELECT VARDAS, PAVARDĖ, ASMENS_KODAS, PROJEKTAS.PAVADINIMAS as &quot;Projektas&quot;
+	FROM DARBUOTOJAS
+	JOIN PROJEKTAS ON DARBUOTOJAS.PROJEKTAS_ID=PROJEKTAS.ID
+	WHERE (DARBUOTOJAS.ASMENS_KODAS like &quot;4%&quot; or DARBUOTOJAS.ASMENS_KODAS like &quot;6%&quot;)
+	AND PROJEKTAS.PAVADINIMAS=&quot;Projektų valdymas&quot;;
+	
+
+-- Atsakymuose:
+SELECT VARDAS, PAVARDĖ, PAVADINIMAS FROM DARBUOTOJAS
+	JOIN PROJEKTAS ON PROJEKTAS.ID = DARBUOTOJAS.PROJEKTAS_ID 
+	WHERE (ASMENS_KODAS LIKE &quot;4%&quot; OR ASMENS_KODAS like &quot;6%&quot;) 
+	AND PROJEKTAS.PAVADINIMAS = &quot;Projektų valdymas&quot;</sql><sql name="SQL 5">-- Išrinkite skyrių pavadinimus su juose dirbančių darbuotojų skaičiumi.
+SELECT SKYRIUS.PAVADINIMAS AS &quot;Skyrius&quot;, count(*)_dirbanciuju_skaicius
+	FROM DARBUOTOJAS
+	JOIN SKYRIUS ON DARBUOTOJAS.SKYRIUS_ID=SKYRIUS.ID
+	GROUP BY SKYRIUS.PAVADINIMAS;</sql><sql name="SQL 6">-- Apribokite #5 užklausos rezultatą taip, kad rodytų tik tuos skyrius kur dirba ne daugiau 5 darbuotojai.
+SELECT SKYRIUS.PAVADINIMAS AS &quot;Skyrius&quot;, count(*)_dirbanciuju_skaicius
+	FROM DARBUOTOJAS
+	JOIN SKYRIUS ON DARBUOTOJAS.SKYRIUS_ID=SKYRIUS.ID
+	GROUP BY SKYRIUS.PAVADINIMAS
+	HAVING count(*) &lt; 5;</sql><sql name="SQL 7">-- Išrinkite darbuotojus (vardus, pavardes, pareigas) kartu su skyrių, kuriuose jie dirba pavadinimais, tačiau nesančius tų skyrių vadovais.
+SELECT VARDAS, PAVARDĖ, PAREIGOS, SKYRIUS.PAVADINIMAS AS &quot;Skyrius&quot;
+	FROM DARBUOTOJAS
+	JOIN SKYRIUS ON DARBUOTOJAS.SKYRIUS_ID = SKYRIUS.ID
+	WHERE NOT PAREIGOS=&quot;Vadovas&quot;;</sql><sql name="SQL 8">-- Sukurkite naują įrašą lentelėje “DARBUOTOJAS” (asmens kodas: 38807117896, vardas: Pranas, pavardė:Logis, Dirba nuo: 2009-11-12, visa kita - Null).
+INSERT INTO DARBUOTOJAS 
+	(VARDAS, PAVARDĖ, ASMENS_KODAS, DIRBA_NUO)
+	VALUES 
+	(&quot;Pranas&quot;, &quot;Logis&quot;, &quot;38807117896&quot;, date('2009-11-12'));</sql><sql name="SQL 9">-- Išrinkite darbuotojų vardus, pavardes ir skyriaus pavadinimą. 
+-- Rodykite, net ir tuos darbuotojus, kurie nedirba jokiame skyriuje (skyriaus pavadinimą pasiimkite iš lentelės SKYRIUS).
+SELECT VARDAS, PAVARDĖ, SKYRIUS.PAVADINIMAS AS &quot;Skyrius&quot;
+	FROM DARBUOTOJAS
+	LEFT JOIN SKYRIUS ON DARBUOTOJAS.SKYRIUS_ID=SKYRIUS.ID;
+	</sql><sql name="SQL 10">-- 1# punkto užklausą pataisykite taip, kad rodytų tik tuos vardus ir projektų pavadinimus, kuriuose dirba daugiau nei 4 darbuotojai.
+SELECT PROJEKTAS.PAVADINIMAS AS &quot;Projektas&quot;, count(*)_kiek_dirbanciuju
+	FROM DARBUOTOJAS 
+	JOIN PROJEKTAS ON DARBUOTOJAS.PROJEKTAS_ID = PROJEKTAS.ID
+	GROUP BY PROJEKTAS.PAVADINIMAS
+	HAVING count(*) &gt;= 4;
+	</sql><sql name="SQL 11">-- Naujame stulpelyje parodyti kiekvieno darbuotojo bazinio atlyginimo ir priedų sumą.
+SELECT VARDAS, BAZINIS_ATLYGINIMAS + PRIEDAI AS &quot;Bazinis_plius_priedas&quot; FROM DARBUOTOJAS;
+	</sql><sql name="SQL 12">-- Parodyti bendrą atlyginimų, priedų sumą, vidutinį, maksimalų, minimalų atlyginimą.
+SELECT sum(BAZINIS_ATLYGINIMAS) AS &quot;Bendras bazinis atlyginimas&quot;, 
+	sum(PRIEDAI) AS &quot;Bendras priedų&quot;, 
+	round(avg(BAZINIS_ATLYGINIMAS),2) AS &quot;Vidutinis atlyginimas&quot;, 
+	max(BAZINIS_ATLYGINIMAS) AS &quot;Maksimalus atlyginimas&quot;,
+	min(BAZINIS_ATLYGINIMAS) AS &quot;Minimalus atlyginimas&quot;
+	FROM DARBUOTOJAS;</sql><current_tab id="11"/></tab_sql></sqlb_project>

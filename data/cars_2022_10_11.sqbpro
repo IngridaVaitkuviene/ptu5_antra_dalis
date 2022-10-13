@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/ingri/Desktop/pythono_kursai/data/cars.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1251"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,4:maincars"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="cars" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="94"/><column index="2" value="94"/><column index="3" value="76"/><column index="4" value="40"/><column index="5" value="42"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="cars_2022_10_11.sqbpro">-- Platesnis WHERE panaudojimas, BETWEEN ... AND ...., veikia ne tik grupevime, bet ir where salygoje
+SELECT * FROM cars WHERE price BETWEEN 10000 AND 30000;
+-- galima tikrinti ir pagal sąrašą
+SELECT * FROM cars WHERE year in (2005, 2010, 2011) ORDER BY year;
+-- paieška tekste. make stulpelyje ieskome teksto su Like kur modeliai prasideda su t raide % - reiškia nulį arba keletą simbolių 
+SELECT * FROM cars WHERE make LIKE &quot;T%&quot;;
+SELECT * FROM cars WHERE make LIKE &quot;%a&quot;;
+SELECT * FROM cars WHERE make LIKE &quot;%t%&quot;;
+-- placeholderis vieno simbolio koziris &quot;_&quot;. _ - reiškia vieną simbolį
+SELECT * FROM cars WHERE model LIKE &quot;__&quot;;
+SELECT * FROM cars WHERE model LIKE &quot;X_&quot;;
+SELECT * FROM cars WHERE model LIKE &quot;X%&quot;;
+SELECT * FROM cars WHERE make LIKE &quot;__n%&quot;;
+-- NULL
+SELECT * FROM cars WHERE color IS NULL;
+UPDATE cars SET color=&quot;Ugly&quot; WHERE color is NULL;
+SELECT * FROM cars WHERE color LIKE &quot;Ugly&quot;;
+-- Loginės sąlygos AND, OR, NOT
+SELECT * FROM cars WHERE make = &quot;Ford&quot; AND price &gt; 40000;
+SELECT * FROM cars WHERE price &lt; 40000 OR color = &quot;Pink&quot;;
+SELECT * FROM cars WHERE (price &lt; 40000 OR color = &quot;Pink&quot;) AND year &gt; 2000;
+SELECT * FROM cars WHERE color NOT IN (&quot;Violet&quot;, &quot;Pink&quot;, &quot;Yellow&quot;, &quot;Turquoise&quot;, &quot;Ugly&quot;, &quot;Fuscia&quot;);
+SELECT * FROM cars WHERE (make = &quot;Volvo&quot; OR make = &quot;Ford&quot;) AND price NOT BETWEEN 10000 AND 50000;
+-- pirma lygybe, tada not, tada and ir tada or
+-- Rūšiavimas
+SELECT * FROM cars ORDER BY year;
+SELECT * FROM cars ORDER BY year DESC LIMIT 5;
+-- kaip pasižiūrėti sekančius 5-is;
+SELECT * FROM cars ORDER BY year DESC LIMIT 5 OFFSET 5;
+-- išrūšiuoja pagal abėcėlę
+SELECT * FROM cars ORDER BY make;
+-- nekreipti dėmesio į raidžių dydį
+SELECT * FROM cars WHERE make=&quot;TOYOTA&quot; COLLATE NOCASE;
+-- rezultatų manipuliavimas su || operatorium
+SELECT &quot;Gamintojas: &quot; || make AS gamintojas, model AS modelis FROM cars LIMIT 10;
+-- Skaičiavimai
+SELECT make, model, price, round(price/3.4528, 2) AS price_euro FROM cars;
+SELECT make || &quot; &quot; || model || &quot;, &quot; || year as car_model_year FROM cars ORDER BY year;
+-- amžiaus skaičiavimas
+SELECT make, model, 2022 - year AS age FROM cars ORDER BY age;
+SELECT make, model, price, round(price/1.18) as &quot;price ex vat&quot; FROM cars ORDER BY &quot;price ex vat&quot;;
+-- TEISINGAS grupavimas
+-- avg() - vidurkis
+-- min() ir max()
+-- count() - skaičiuoja
+-- sum() - sumuoja
+SELECT sum(price) FROM cars;
+SELECT make, sum(price) FROM cars GROUP BY make;
+SELECT avg(year) FROM cars;
+SELECT avg(year) FROM cars GROUP BY make;
+-- Darant kompleksiškas užklausas, reikėtų laikytis tokio eiliškumo:
+-- SELECT stulpelis, grupinė_funkcija
+-- FROM lentelė
+-- WHERE sąlyga]
+-- [GROUP BY sąrašas_grupavimui]
+-- [HAVING grupės sąlyga]
+-- [ORDER BY rūšiavimo sąlyga]
+SELECT make, avg(year), count(*) FROM cars GROUP BY make HAVING count(*) &gt; 1;
+SELECT make, avg(price), count(*) FROM cars GROUP BY make HAVING count(*) &gt; 1;
+SELECT min(price), max(price), avg(price) FROM cars;
+SELECT max(price), make, model FROM cars;
+SELECT color, max(price), avg(price), min(price), make, model, count(*) FROM cars GROUP BY color ORDER BY price DESC;
+SELECT color, avg(price), avg(price), min(price), make, model, count(*) FROM cars GROUP BY color ORDER BY price DESC;
+SELECT color, round(avg(price), 2), make, model, count(*) FROM cars GROUP BY color ORDER BY price DESC;
+
+--SELECT make, model, year, price
+--FROM cars
+--WHERE make NOT IN (&quot;Toyota&quot;, &quot;Mercury&quot;, &quot;Volvo&quot;)
+--GROUP BY price
+--HAVING year &gt; 2007
+--ORDER BY make;
+-- susirinkom duomenis 
+SELECT make, model, year, max(price), color, count(*)
+-- is cars lenteles
+FROM cars
+-- kurios ne toyota mercury ir volvo, filtruojam duomenis, kuriuos grupuosim, tada iskelsim salyga ir surusiuosim
+WHERE make NOT IN (&quot;Toyota&quot;, &quot;Mercury&quot;, &quot;Volvo&quot;)
+-- grupuojam pagl metus, 
+GROUP BY year
+-- itraukiam salyga, kad spalva nebutu pink ir turkiska ir kad daugiau butu uz viena, salyga grupavimui
+HAVING color NOT IN (&quot;Pink&quot;, &quot;Turquoise&quot;) AND count(*) &gt; 1
+-- ir rusiuojam pagal metus
+ORDER BY year;
+
+
+
+
+
+
+</sql><sql name="SQL 2"></sql><current_tab id="1"/></tab_sql></sqlb_project>

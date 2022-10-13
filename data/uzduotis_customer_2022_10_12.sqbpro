@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/ingri/Desktop/pythono_kursai/data/uzduotis_customer_2022_10_12.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1304"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainorder_"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="customer" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="45"/><column index="2" value="113"/><column index="3" value="87"/><column index="4" value="175"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="order_" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="59"/><column index="2" value="134"/><column index="3" value="96"/><column index="4" value="157"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="product" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="58"/><column index="2" value="94"/><column index="3" value="66"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="product_order" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="96"/><column index="2" value="103"/><column index="3" value="114"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="status" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="1" mode="0"/></sort><column_widths><column index="1" value="40"/><column index="2" value="192"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE customer (
+	id INTEGER PRIMARY KEY NOT NULL,
+	f_name VARCHAR(50) NOT NULL,
+	l_name VARCHAR(100) NOT NULL,
+	email VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE status (
+	id INTEGER PRIMARY KEY NOT NULL,
+	name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE order_ (
+	id INTEGER PRIMARY KEY NOT NULL,
+	customer_id INTEGER,
+	date_ date,
+	status_id INTEGER,
+	FOREIGN KEY (customer_id) REFERENCES customer(id),
+	FOREIGN KEY (status_id) REFERENCES status(id)
+);
+
+CREATE TABLE product (
+	id INTEGER PRIMARY KEY NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	price FLOAT
+);
+
+CREATE TABLE product_order (
+	order_id INTEGER NOT NULL,
+	product_id INTEGER NOT NULL,
+	quantity INTEGER NOT NULL,
+	FOREIGN KEY (order_id) REFERENCES order_(id),
+	FOREIGN KEY (product_id) REFERENCES product(id)
+);
+	</sql><sql name="SQL 2">--Customers
+INSERT INTO &quot;customer&quot; (&quot;f_name&quot;, &quot;l_name&quot;, &quot;email&quot;) VALUES ('Jonas', 'Jonaitis', 'jj@gmail.com');
+INSERT INTO &quot;customer&quot; (&quot;f_name&quot;, &quot;l_name&quot;, &quot;email&quot;) VALUES ('Antanas', 'Antanaitis', 'aa@gmail.com');
+INSERT INTO &quot;customer&quot; (&quot;f_name&quot;, &quot;l_name&quot;, &quot;email&quot;) VALUES ('Juozas', 'Juozaitis', 'jj@hotmail.com');
+
+
+ 
+</sql><sql name="SQL 3">-- Status
+INSERT INTO &quot;status&quot; (&quot;name&quot;) VALUES ('Patvirtintas');
+INSERT INTO &quot;status&quot; (&quot;name&quot;) VALUES ('Vykdomas');
+INSERT INTO &quot;status&quot; (&quot;name&quot;) VALUES ('Įvykdytas');
+INSERT INTO &quot;status&quot; (&quot;name&quot;) VALUES ('Atmestas');</sql><sql name="SQL 4">--Products
+INSERT INTO &quot;product&quot; (&quot;name&quot;, &quot;price&quot;) VALUES ('Smėlis', '15');
+INSERT INTO &quot;product&quot; (&quot;name&quot;, &quot;price&quot;) VALUES ('Žvyras', '20');
+INSERT INTO &quot;product&quot; (&quot;name&quot;, &quot;price&quot;) VALUES ('Juodžemis', '40');
+INSERT INTO &quot;product&quot; (&quot;name&quot;, &quot;price&quot;) VALUES ('Trašos', '80');</sql><sql name="SQL 5">-- Orders
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-11', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('2', '2022-10-11', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('3', '2022-10-11', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-12', '2');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('2', '2022-10-12', '2');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('3', '2022-10-12', '2');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-13', '3');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('2', '2022-10-13', '3');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('3', '2022-10-13', '3');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-13', '4');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('2', '2022-10-13', '4');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('3', '2022-10-13', '4');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('3', '2022-10-13', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('3', '2022-10-13', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('3', '2022-10-13', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-13', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-13', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-13', '1');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-13', '4');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-13', '4');
+INSERT INTO &quot;order_&quot; (&quot;customer_id&quot;, &quot;date_&quot;, &quot;status_id&quot;) VALUES ('1', '2022-10-13', '4');
+</sql><sql name="SQL 6">-- Products orders
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('1', '1', '20');
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('2', '2', '30');
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('3', '3', '40');
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('3', '1', '60');
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('3', '2', '10');
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('3', '3', '90');
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('4', '1', '60');
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('5', '2', '10');
+INSERT INTO &quot;product_order&quot; (&quot;order_id&quot;, &quot;product_id&quot;, &quot;quantity&quot;) VALUES ('6', '3', '90');
+
+</sql><sql name="SQL 7">-- Užklausa užsakymo id, užsakovo pavardė, data, bendra užsakymo suma:
+SELECT order_.id, order_.date_, customer.l_name, product.price * product_order.quantity AS &quot;Price&quot;
+	FROM product_order
+	JOIN order_ ON product_order.order_id=order_.id
+	JOIN customer ON order_.customer_id=customer.id
+	JOIN product ON product_order.product_id=product.id
+	GROUP BY order_id;</sql><sql name="SQL 8">-- Užklausa užsakymo ID, pozicijos su kiekiais, kainomis ir bendra pozicijos suma:
+SELECT product_order.order_id, product.name, product_order.quantity, product.price, product.price * product_order.quantity AS &quot;Total&quot;
+	FROM product_order
+	JOIN product ON product_order.product_id=product.id;
+	</sql><sql name="SQL 9">-- Užklausa prieš tai buvusios užklausos pagrindu sukurti užklausą, kurioje matytųsi, kiek ir kokio produkto buvo uzsakyta:
+SELECT product.name, sum(product_order.quantity) AS &quot;Quantity&quot;, product.price, product.price * product_order.quantity AS &quot;Total&quot;
+	FROM product
+	JOIN product_order ON product.id=product_order.product_id
+	GROUP BY product.name;
+</sql><current_tab id="6"/></tab_sql></sqlb_project>

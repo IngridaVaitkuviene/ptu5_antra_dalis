@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/ingri/Desktop/pythono_kursai/data/database.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1684"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,7:maincompany"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="car" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="71"/><column index="3" value="69"/><column index="4" value="63"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="company" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="181"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="person" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="40"/><column index="2" value="78"/><column index="3" value="75"/><column index="4" value="189"/><column index="5" value="48"/><column index="6" value="85"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">-- Duomenų išrinkimas iš kelių lentelių
+-- Yra du pagrindiniai būdai jungti duomenis iš skirtingų lentelių, vienas iš jų yra naudojant WHERE:
+SELECT * FROM person;
+SELECT * FROM car;
+SELECT * FROM company;
+-- Sujungiame 2 lenteles
+-- SELECT &lt;stulpeliai&gt; FROM &lt;lentelė1&gt;, &lt;lentelė2&gt; WHERE &lt;jungimo sąlyga&gt; [AND &lt;paieškos sąlyga&gt;];
+SELECT first_name, last_name, plate FROM person, car WHERE person.car_id=car.id;
+SELECT person.first_name, person.last_name, car.plate FROM person, car WHERE person.car_id=car.id;
+
+-- Sujungiame 3 lenteles
+SELECT first_name, make || &quot; &quot; || model AS &quot;car make model&quot;, name AS &quot;company name&quot; from person, car, company 
+	WHERE person.car_id=car.id AND person.company_id=company.id ORDER by name;
+SELECT first_name, make || &quot; &quot; || model AS &quot;car make model&quot;, name AS &quot;company name&quot; from person, car, company 
+	WHERE person.car_id=car.id AND person.company_id=company.id AND make=&quot;Ford&quot;;
+
+-- kitas būdas naudojant JOIN:
+-- SELECT &lt;stulpeliai&gt; FROM &lt;lentelė1&gt; JOIN &lt;lentelė 2&gt; ON &lt;jungimo sąlyga&gt; [WHERE &lt;paieškos sąlyga&gt;];
+-- sujungiame 2 lenteles su JOIN
+SELECT first_name, last_name, plate FROM person JOIN car ON car_id = car.id;
+SELECT person.first_name, person.last_name, car.plate FROM person JOIN car ON person.car_id = car.id;
+
+-- sujungiam 3 lenteles su JOIN
+SELECT person.first_name, person.last_name, car.make, car.model, company.name FROM person
+	JOIN car ON person.car_id = car.id
+	JOIN company ON person.company_id = company.id
+	WHERE car.make = &quot;Ford&quot;
+	ORDER BY company.name;
+
+-- grupuojame su JOIN	Kiek sudėtingesnis - suskaičiuokime, kiek kokioje kompanijoje dirba žmonių:
+SELECT company.name, count(*) FROM person
+	JOIN company ON person.company_id = company.id
+	GROUP BY company.name;
+	
+-- Atrinkime tik tas kompanijas, kuriose dirba daugiau, negu 3 automobilių savininkai:
+SELECT company.name, count(*) FROM person
+	JOIN company ON person.company_id = company.id
+	GROUP BY company.name
+	HAVING count(*) &gt; 3;
+	
+-- Kokie yra Apple automobilių numeriai? Surandam Apple kompanijos darbuotoju auto valstybinius numerius
+SELECT name, plate FROM person
+	JOIN company ON person.company_id = company.id
+	JOIN car ON person.car_id = car.id
+	WHERE company.name = &quot;Apple&quot;;
+	
+-- NAUDOJAMI 2 SELECT'us. 
+-- Išrenkam darbuotoju vardus ir pavardes, mašinų markes ir kompaniju pavadinimus, pagal imoniu sarasa, kuriose dirba ne daugiau kaip 3 darbuotojai
+SELECT first_name, last_name, make AS car_maker, name AS company_name FROM person
+	JOIN company ON person.company_id = company.id
+	JOIN car ON person.car_id = car.id
+	WHERE company_id IN (
+		-- filtro uzklausa
+		SELECT company_id FROM person
+			GROUP BY company_id
+			HAVING count(*) &lt;= 3
+		)
+	ORDER BY company.name;
+	
+-- JOIN rūšys
+-- INNER JOIN yra standartinis JOIN, kurį naudojome iki šiol
+-- LEFT JOIN - jungimo rezultatas yra papildomas kairiosios (pirmosios) lentelės nesujungiamomis eilutėmis.
+-- RIGHT JOIN - jungimo rezultatas yra papildomas dešiniosios (antrosios) lentelės nesujungiamomis eilutėmis.
+-- FULL OUTER JOIN - papildoma abiejų lentelių eilutėmis nesujungiamomis eilutėmis.
+-- Populiariausias apart standartinio JOIN yra LEFT JOIN, jį ir panagrinėsime:
+
+-- LEFT JOIN, išrinksim ir darbuotojus be automobilių. 
+--Stardartiniam INNER JOIN'ui svarbu, kad kiekvienam irasui butu priskirtas ID, o LEFT JOIN'as paima visus duomenis ir tuos, kurie kaikuriu duomenu neturi
+SELECT first_name, last_name, make, model 
+	FROM person 
+	LEFT JOIN car ON person.car_id = car.id;
+	
+</sql><sql name="SQL 3">SELECT * FROM company LIMIT 1;
+INSERT INTO company (name) VALUES (&quot;Middle of Nowhere&quot;)</sql><current_tab id="0"/></tab_sql></sqlb_project>
