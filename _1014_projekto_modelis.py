@@ -19,5 +19,7 @@ class Projektas(Base):
     def __repr__(self):
         return f"({self.id}, {self.name}, {self.price}, {self.created_date})"
 
+# duomenų bazės sukūrimui. Vienam kartui. If'as reikalingas tam, kad, kai kreipiesi i ta faila per import ir importuojasi klase, 
+# kad tada nevykdytu sitos kodo eilutes antrakart
 if __name__ == "__main__":
     Base.metadata.create_all(engine)
