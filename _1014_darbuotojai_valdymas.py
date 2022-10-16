@@ -12,7 +12,7 @@
 #     Leistų ištrinti pasirinktą asmenį iš duomenų bazės
 #     Leistų paredaguoti įvesto asmens duomenis ir įrašyti atnaujinimus į duomenų bazę Sukurti paleidžiamąjį programos failą (exe, su ikona)
 
-
+import datetime
 from _1014_darbuotojai_modelis import Darbuotojai, engine
 from sqlalchemy.orm import sessionmaker
 
@@ -30,27 +30,66 @@ def new_employee():
     try:
         name = str(input("Vardas: "))
         surname = str(input("Pavardė: "))
-        # birthday = input("Gimimo data: ") kaip čia su tomis datomis????
+        birthday = input("Gimimo data YYYY-MM-DD HH:MM:SS: ") 
         position = input("Pareigos: ")
         salary = float(input("Atlyginimas: "))
     except ValueError:
         print("KLAIDA: Atlyginimas nurodomas skaičiais")
-        # year = input("Dirba nuo: ") kaip čia su tomis datomis????
-    except ValueError:
-        print("KLAIDA: Dirba nuo turi būti skaičius.")
         return
     else:
-        employee = Darbuotojai(name, surname, birthday, position, salary, year)
+        employee = Darbuotojai(name, surname, birthday, position, salary)
         session.add(employee)
         session.commit()
         print(f"Darbuotojas {employee} sukurtas sėkmingai!")
 
+def input_employee():
+    print_list()
+    try:
+        employee_id = int(input("Įveskite trinamo/keičiamo darbuotojo ID: "))
+    except ValueError:
+        print("KLAIDA: ID turi būti skaičius")
+        return None
+    else:
+        if employee_id:
+            employee = session.query(Darbuotojai).get(employee_id)
+            if employee:
+                return employee
+            else:
+                print(f"KLAIDA: Darbuotojas su ID: {employee_id} neegzistuoja")
+                return None
+
 def update_employee():
-    pass
+    employee = input_employee()     
+    if employee:
+        try:
+            name = input(f"Vardas ({employee.name}): ")
+            surname = input(f"Pavardė ({employee.surname}): ")
+            birthday = input(f"Gimimo data YYYY-MM-DD HH:MM:SS ({employee.birthday}): ")
+            position = input(f"Pareigos ({employee.position}): ")
+            salary = float(input(f"Atlyginimas ({employee.salary}): ") or 0)
+        except ValueError:
+            print("KLAIDA: Atlyginimas nurodomas skaičiais.")
+            return
+        else:
+            if len(name) > 0:
+                employee.name = name
+            if len(surname) > 0:
+                employee.surname = surname
+            if birthday:
+                employee.birthday = datetime.datetime.strptime(birthday, "%Y-%m-%d %H:%M:%S")
+            if len(position) > 0:
+                employee.position = position
+            if salary:
+                employee.salary = salary
+            session.commit()
+            print(f"Darbuotojas {employee} atnaujintas sėkmingai.")  
 
 def delete_employee():
-    pass
-
+    trinamas = input_employee()
+    if trinamas:
+        session.delete(trinamas)
+        session.commit()
+        print(f"Darbuotojas {trinamas} ištrintas sėkmingai!")
 
 # programos MENIU
 while True:

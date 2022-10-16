@@ -19,15 +19,14 @@ class Darbuotojai(Base):
     birthday = Column("Gimimo data", Date)
     position = Column("Pareigos", String)
     salary = Column("Atlyginimas", Float)
-    year = Column("Dirba nuo", DateTime, default=datetime.datetime.now())
+    year = Column("Dirba nuo", DateTime, default=datetime.datetime.utcnow)
 
-    def __init__(self, name, surname, birthday, position, salary, year):
+    def __init__(self, name, surname, birthday, position, salary):
         self.name = name
         self.surname = surname
-        self.birthday = birthday
+        self.birthday = datetime.datetime.strptime(birthday, "%Y-%m-%d %H:%M:%S")
         self.position = position
         self.salary = salary
-        self.year = year
     
     def __repr__(self):
         return f"({self.id}, {self.name}, {self.surname}, {self.birthday}, {self.position}, {self.salary}, {self.year})"
