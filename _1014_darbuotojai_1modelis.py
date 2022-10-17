@@ -24,7 +24,7 @@ class Darbuotojai(Base):
     def __init__(self, name, surname, birthday, position, salary):
         self.name = name
         self.surname = surname
-        self.birthday = datetime.datetime.strptime(birthday, "%Y-%m-%d %H:%M:%S")
+        self.birthday = datetime.datetime.strptime(birthday, "%Y-%m-%d")
         self.position = position
         self.salary = salary
     
