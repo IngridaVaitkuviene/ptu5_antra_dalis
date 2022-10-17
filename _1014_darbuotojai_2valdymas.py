@@ -4,16 +4,10 @@
 #     Duomenys būtų saugomi duomenų bazėje, panaudojant SQLAlchemy ORM (be SQL užklausų)
 #     Vartotojas galėtų įrašyti, peržiūrėti, ištrinti ir atnaujinti darbuotojus.
 # 
-# Perdaryti programą 1 užduotyje, kad ji:
-#
-#     Turėtų grafinę sąsają (su ikona ir pavadinimu). Sukurti per Tkinter
-#     Leistų įvesti asmenis į duomenų bazę (jų vardą, pavardę, amžių, ...)
-#     Parodytų visų į duomenų bazę įvestų asmenų sąrašą
-#     Leistų ištrinti pasirinktą asmenį iš duomenų bazės
-#     Leistų paredaguoti įvesto asmens duomenis ir įrašyti atnaujinimus į duomenų bazę Sukurti paleidžiamąjį programos failą (exe, su ikona)
+
 
 import datetime
-from _1014_darbuotojai_modelis import Darbuotojai, engine
+from _1014_darbuotojai_1modelis import Darbuotojai, engine
 from sqlalchemy.orm import sessionmaker
 
 session = sessionmaker(bind=engine)()
@@ -92,25 +86,25 @@ def delete_employee():
         print(f"Darbuotojas {trinamas} ištrintas sėkmingai!")
 
 # programos MENIU
-while True:
-    print("=== Darbuotojų duomenų bazė ===")
-    print("Pasirinkite: ")
-    print("- q: išeiti")
-    print("- p: rodyti visus darbuotojus")
-    print("- n: naujas darbuotojas")
-    print("- u: pakeisti darbuotojo duomenis")
-    print("- d: trinti darbuotoją")
-    pasirinkimas = input("Pasirinkite: ").casefold()
-    if pasirinkimas == "q":
-        print("Programa baigta!")
-        break
-    elif pasirinkimas == "p":
-        print_list()
-    elif pasirinkimas == "n":
-        new_employee()
-    elif pasirinkimas == "u":
-        update_employee()
-    elif pasirinkimas == "d":
-        delete_employee()
-    else:
-        print("KLAIDA: Blogas pasirinkimas, rinkitės iš naujo!")
+# while True:
+#     print("=== Darbuotojų duomenų bazė ===")
+#     print("Pasirinkite: ")
+#     print("- q: išeiti")
+#     print("- p: rodyti visus darbuotojus")
+#     print("- n: naujas darbuotojas")
+#     print("- u: pakeisti darbuotojo duomenis")
+#     print("- d: trinti darbuotoją")
+#     pasirinkimas = input("Pasirinkite: ").casefold()
+#     if pasirinkimas == "q":
+#         print("Programa baigta!")
+#         break
+#     elif pasirinkimas == "p":
+#         print_list()
+#     elif pasirinkimas == "n":
+#         new_employee()
+#     elif pasirinkimas == "u":
+#         update_employee()
+#     elif pasirinkimas == "d":
+#         delete_employee()
+#     else:
+#         print("KLAIDA: Blogas pasirinkimas, rinkitės iš naujo!")
