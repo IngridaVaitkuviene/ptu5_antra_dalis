@@ -14,12 +14,12 @@ tree.heading('first_name', text='First Name')
 tree.heading('last_name', text='Last Name')
 tree.heading('email', text='Email')
 
-# contacts = []
-# for n in range(1, 100):
-#     contacts.append((f'first {n}', f'last {n}', f'email{n}@example.com'))
+contacts = []
+for n in range(1, 100):
+    contacts.append((f'first {n}', f'last {n}', f'email{n}@example.com'))
 
-# for contact in contacts:
-#     tree.insert('', tk.END, values=contact)
+for contact in contacts:
+    tree.insert('', tk.END, values=contact)
 
 def item_selected(event):
     for selected_item in tree.selection():
